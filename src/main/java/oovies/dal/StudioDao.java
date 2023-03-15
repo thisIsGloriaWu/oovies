@@ -221,4 +221,39 @@ public class StudioDao {
 		return studios;
 	}
 
+    public List<Studio> getStudioFromLocation(String location) throws SQLException {
+		String selectStudio = "SELECT StudioId,Name,Location FROM Studio WHERE Location=?;";
+		Connection connection = null;
+		PreparedStatement selectStmt = null;
+		ResultSet results = null;
+        List<Studio> studios = new ArrayList<Studio>();
+		try {
+			connection = connectionManager.getConnection();
+			selectStmt = connection.prepareStatement(selectStudio);
+			selectStmt.setString(1, location);
+			
+			results = selectStmt.executeQuery();
+			while(results.next()) {
+                int studioId = results.getInt("StudioId");
+				String resultName = results.getString("Name");
+				String resultlocation = results.getString("Location");
+				Studio studio = new Studio(studioId, resultName, resultlocaion);
+                studios.add(studio);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(connection != null) {
+				connection.close();
+			}
+			if(selectStmt != null) {
+				selectStmt.close();
+			}
+			if(results != null) {
+				results.close();
+			}
+		}
+		return studios;
+	}
 }
