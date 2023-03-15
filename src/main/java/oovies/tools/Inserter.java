@@ -56,11 +56,11 @@ public class Inserter {
 		
 		//UPDATE
 		System.out.format("Before updadte actor name, name:%s\n", actor.getName());
-		Actor actor3 = actorDao.updateName(actor, "newbruce")
+		Actor actor3 = actorDao.updateName(actor, "newbruce");
 		System.out.format("After updadte actor name, name:%s\n", actor3.getName());
 
 		System.out.format("Before updadte studio name, name:%s\n", studio.getName());
-		Studio studio3 = studioDao.updateName(studio, "newstudio")
+		Studio studio3 = studioDao.updateName(studio, "newstudio");
 		System.out.format("After updadte studio name, name:%s\n", studio3.getName());
 		
 		System.out.format("Before updadte studio location, location:%s\n", studio.getLocation());
