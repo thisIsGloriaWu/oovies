@@ -6,18 +6,15 @@ public class Love {
 	protected Movie movie;
 	
 	public Love(int loveId, Person user, Movie movie) {
-		super();
 		this.loveId = loveId;
 		this.user = user;
 		this.movie = movie;
 	}
 	public Love(Person user, Movie movie) {
-		super();
 		this.user = user;
 		this.movie = movie;
 	}
 	public Love(int loveId) {
-		super();
 		this.loveId = loveId;
 	}
 	

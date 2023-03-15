@@ -6,20 +6,17 @@ public class Follow {
 	protected Actor actor;
 	
 	public Follow(int followId, Person user, Actor actor) {
-		super();
 		this.followId = followId;
 		this.user = user;
 		this.actor = actor;
 	}
 
 	public Follow(Person user, Actor actor) {
-		super();
 		this.user = user;
 		this.actor = actor;
 	}
 
 	public Follow(int followId) {
-		super();
 		this.followId = followId;
 	}
 
