@@ -86,6 +86,12 @@ public class Inserter {
 		casts.add(new Casts(movies.get(1), actors.get(0)));
 		casts.add(new Casts(movies.get(2), actors.get(0)));
 		casts.add(new Casts(movies.get(0), actors.get(1)));
+		
+		follows.add(new Follow(persons.get(0), actors.get(0)));
+		follows.add(new Follow(persons.get(1), actors.get(0)));
+		
+		loves.add(new Love(persons.get(0), movies.get(0)));
+		loves.add(new Love(persons.get(1), movies.get(0)));
 
 		// Test Create Methods for all classes.
 		createAll();
@@ -125,6 +131,14 @@ public class Inserter {
 
 		for (Casts cast : casts) {
 			castDao.create(cast);
+		}
+		
+		for (Follow follow : follows) {
+			followDao.create(follow);
+		}
+		
+		for (Love love : loves) {
+			loveDao.create(love);
 		}
 	}
 
@@ -261,6 +275,58 @@ public class Inserter {
 			System.out.format("Reading cast by ActorId %d: castId:%d title:%s actorName:%s\n", castActorId, other.getCastId(),
 					other.getMovie().getTitle(), other.getActor().getName());
 		}
+		
+		
+		/**
+		 * Read methods from Follow.
+		 */
+		Follow follow = follows.get(0);
+		int followId = follow.getFollowId();
+		int followUserId = follow.getUser().getUserId();
+		int followActorId = follow.getActor().getActorId();
+		
+		// Get follow by given followId
+		follow = followDao.getFollowById(followId);
+		System.out.format("Reading follow by followId %d: followId:%d userId:%d, actorId:%d \n", 
+				followId, follow.getFollowId(), follow.getUser().getUserId(), follow.getActor().getActorId());
+		
+		// Get follows' list by given userId
+		for (Follow other : followDao.getFollowByUserId(followUserId)) {
+			System.out.format("Reading follow by userId %d: followId:%d userId:%d, actorId:%d \n", 
+					followUserId, other.getFollowId(), other.getUser().getUserId(), other.getActor().getActorId());
+		}
+		
+		// Get follows' list by given actorId
+		for (Follow other : followDao.getFollowByActorId(followActorId)) {
+			System.out.format("Reading follow by actorId %d: followId:%d userId:%d, actorId:%d \n", 
+					followActorId, other.getFollowId(), other.getUser().getUserId(), other.getActor().getActorId());
+		}
+		
+		
+		/**
+		 * Read methods from Love.
+		 */
+		Love love = loves.get(0);
+		int loveId = love.getLoveId();
+		int loveUserId = love.getUser().getUserId();
+		int loveMovieId = love.getMovie().getMovieId();
+		
+		// Get follow by given followId
+		love = loveDao.getLoveById(loveId);
+		System.out.format("Reading love by loveId %d: loveId:%d userId:%d, movieId:%d \n", 
+				loveId, love.getLoveId(), love.getUser().getUserId(), love.getMovie().getMovieId());
+		
+		// Get follows' list by given userId
+		for (Love other : loveDao.getLoveByUserId(loveUserId)) {
+			System.out.format("Reading love by userId %d: loveId:%d userId:%d, movieId:%d \n", 
+					loveUserId, other.getLoveId(), other.getUser().getUserId(), other.getMovie().getMovieId());
+		}
+		
+		// Get follows' list by given movieId
+		for (Love other : loveDao.getLoveByMovieId(loveMovieId)) {
+			System.out.format("Reading love by movieId %d: loveId:%d userId:%d, movieId:%d \n", 
+					loveMovieId, other.getLoveId(), other.getUser().getUserId(), other.getMovie().getMovieId());
+		}
 	}
 
 	public static void updateAll() throws SQLException {
@@ -337,6 +403,14 @@ public class Inserter {
 
 		for (Casts cast : casts) {
 			castDao.delete(cast);
+		}
+		
+		for (Follow follow : follows) {
+			followDao.delete(follow);
+		}
+		
+		for (Love love: loves) {
+			loveDao.delete(love);
 		}
 	}
 }

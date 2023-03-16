@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import oovies.model.*;
+import oovies.model.Actor;
+import oovies.model.Follow;
+import oovies.model.Person;
 
 public class FollowDao {
 	protected ConnectionManager connectionManager;
