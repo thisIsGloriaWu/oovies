@@ -6,11 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import oovies.model.*;
+import oovies.model.Director;
+import oovies.model.Movie;
+import oovies.model.Studio;
 
 
 
@@ -68,7 +69,7 @@ public class MovieDao {
 				if(resultKey.next()) {
 					movieId = resultKey.getInt(1);
 				} else {
-				throw new SQLException("Unable to retrieve auto-generated key.");
+					throw new SQLException("Unable to retrieve auto-generated key.");
 				}
 				movie.setMovieId(movieId);
 				
@@ -82,6 +83,9 @@ public class MovieDao {
 				}
 				if(insertStmt != null) {
 					insertStmt.close();
+				}
+				if (resultKey != null) {
+					resultKey.close();
 				}
 			}
 		}
@@ -151,12 +155,12 @@ public class MovieDao {
 					int directorId = results.getInt("DirectorID");
 					Director director = directorDao.getDirectorByDirectorId(directorId);
 					int studioId = results.getInt("StudioID");
-					Studio studio = stuioDao.getStudioById(studioId);
+					Studio studio = studioDao.getStudioById(studioId);
 					
 					Movie.Genre genre = Movie.Genre.valueOf(results.getString("Genre"));
 					
 					Movie movie = new Movie (resultMovieId, title, releaseDate, rating, duration, summary, 
-							genre, director, studio, genre);
+							director, studio, genre);
 					return movie;
 				}
 			} catch (SQLException e) {
@@ -216,10 +220,9 @@ public class MovieDao {
 					Movie.Genre genre = Movie.Genre.valueOf(results.getString("Genre"));
 					
 					Movie movie = new Movie (resultMovieId, title, releaseDate, rating, duration, summary, 
-							genre, director, studio, genre);
+							director, studio, genre);
 					
 					movies.add(movie);
-					return movies;
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -235,7 +238,7 @@ public class MovieDao {
 					results.close();
 				}
 			}
-			return null;
+			return movies;
 		}
 		
 		/**
@@ -277,7 +280,7 @@ public class MovieDao {
 					Movie.Genre genre = Movie.Genre.valueOf(results.getString("Genre"));
 					
 					Movie movie = new Movie (resultMovieId, title, releaseDate, rating, duration, summary, 
-							genre, director, studio, genre);
+							director, studio, genre);
 					
 					movies.add(movie);
 					return movies;
@@ -341,7 +344,7 @@ public class MovieDao {
 							results.getString("Genre"));
 					
 					Movie movie = new Movie (resultMovieId, title, releaseDate, rating, duration, summary, 
-							genre, director, studio, resultGenre);
+							director, studio, resultGenre);
 					
 					movies.add(movie);
 					return movies;
