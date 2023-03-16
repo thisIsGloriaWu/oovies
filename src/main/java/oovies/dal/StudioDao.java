@@ -1,12 +1,14 @@
 package oovies.dal;
 
-import oovies.model.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import oovies.model.Studio;
 
 public class StudioDao {
 
@@ -32,15 +34,26 @@ public class StudioDao {
      */
 
     public Studio create(Studio studio) throws SQLException {
-		String inserStudio = "INSERT INTO Studio(Name,Location) VALUES(?,?);";
+		String insertStudio = "INSERT INTO Studio(Name,Location) VALUES(?,?);";
 		Connection connection = null;
 		PreparedStatement insertStmt = null;
+		ResultSet resultKey = null;
 		try {
 			connection = connectionManager.getConnection();
-			insertStmt = connection.prepareStatement(inserStudio);
+			insertStmt = connection.prepareStatement(insertStudio,
+					Statement.RETURN_GENERATED_KEYS);
 			insertStmt.setString(1, studio.getName());
 			insertStmt.setString(2, studio.getLocation());
 			insertStmt.executeUpdate();
+			
+			resultKey = insertStmt.getGeneratedKeys();
+			int studioId = -1;
+			if (resultKey.next()) {
+				studioId = resultKey.getInt(1);
+			} else {
+				throw new SQLException("Unable to retrieve auto-generated key.");
+			}
+			studio.setStudioId(studioId);
 			return studio;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -51,6 +64,9 @@ public class StudioDao {
 			}
 			if(insertStmt != null) {
 				insertStmt.close();
+			}
+			if (resultKey != null) {
+				resultKey.close();
 			}
 		}
 	}
@@ -68,7 +84,7 @@ public class StudioDao {
             connection = connectionManager.getConnection();
             updateStmt = connection.prepareStatement(updateStudio);
             updateStmt.setString(1, newName);
-            updateStmt.setString(2, studio.getStudioId());
+            updateStmt.setInt(2, studio.getStudioId());
             updateStmt.executeUpdate();
 
             studio.setName(newName);
@@ -99,7 +115,7 @@ public class StudioDao {
             connection = connectionManager.getConnection();
             updateStmt = connection.prepareStatement(updateStudio);
             updateStmt.setString(1, newLocation);
-            updateStmt.setString(2, studio.setStudioId());
+            updateStmt.setInt(2, studio.getStudioId());
             updateStmt.executeUpdate();
             studio.setLocation(newLocation);
             return studio;
@@ -128,7 +144,7 @@ public class StudioDao {
 		try {
 			connection = connectionManager.getConnection();
 			deleteStmt = connection.prepareStatement(deleteStudio);
-			deleteStmt.setString(1, studio.getStudioId());
+			deleteStmt.setInt(1, studio.getStudioId());
 			deleteStmt.executeUpdate();
 			return null;
 		} catch (SQLException e) {
@@ -159,7 +175,7 @@ public class StudioDao {
 			if(results.next()) {
 				int resultStudioId = results.getInt("StudioId");
 				String name = results.getString("Name");
-				String location = results.getString("Lication");
+				String location = results.getString("Location");
 				Studio studio = new Studio(resultStudioId, name, location);
 				return studio;
 			}
@@ -201,7 +217,7 @@ public class StudioDao {
                 int studioId = results.getInt("StudioId");
 				String resultName = results.getString("Name");
 				String location = results.getString("Location");
-				Studio studio = new Studio(studioId, resultName, locaion);
+				Studio studio = new Studio(studioId, resultName, location);
                 studios.add(studio);
 			}
 		} catch (SQLException e) {
@@ -237,7 +253,7 @@ public class StudioDao {
                 int studioId = results.getInt("StudioId");
 				String resultName = results.getString("Name");
 				String resultlocation = results.getString("Location");
-				Studio studio = new Studio(studioId, resultName, resultlocaion);
+				Studio studio = new Studio(studioId, resultName, resultlocation);
                 studios.add(studio);
 			}
 		} catch (SQLException e) {
