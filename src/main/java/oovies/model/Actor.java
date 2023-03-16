@@ -1,5 +1,7 @@
 package oovies.model;
 
+import java.util.Objects;
+
 public class Actor{
 
     protected int actorId;

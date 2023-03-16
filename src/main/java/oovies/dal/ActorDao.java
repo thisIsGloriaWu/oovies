@@ -1,12 +1,14 @@
 package oovies.dal;
 
-import oovies.model.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import oovies.model.Actor;
 
 public class ActorDao {
 
@@ -34,12 +36,23 @@ public class ActorDao {
 		String insertActor = "INSERT INTO Actor(Name,Gender) VALUES(?,?);";
 		Connection connection = null;
 		PreparedStatement insertStmt = null;
+		ResultSet resultKey = null;
 		try {
 			connection = connectionManager.getConnection();
-			insertStmt = connection.prepareStatement(insertActor);
+			insertStmt = connection.prepareStatement(insertActor,
+					Statement.RETURN_GENERATED_KEYS);
 			insertStmt.setString(1, actor.getName());
 			insertStmt.setString(2, actor.getGender().name());
 			insertStmt.executeUpdate();
+			
+			resultKey = insertStmt.getGeneratedKeys();
+			int actorId = -1;
+			if (resultKey.next()) {
+				actorId = resultKey.getInt(1);
+			} else {
+				throw new SQLException("Unable to retrieve auto-generated key.");
+			}
+			actor.setActorId(actorId);
 			return actor;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -50,6 +63,9 @@ public class ActorDao {
 			}
 			if(insertStmt != null) {
 				insertStmt.close();
+			}
+			if (resultKey != null) {
+				resultKey.close();
 			}
 		}
 	}
@@ -67,7 +83,7 @@ public class ActorDao {
             connection = connectionManager.getConnection();
             updateStmt = connection.prepareStatement(updateActor);
             updateStmt.setString(1, newName);
-            updateStmt.setString(2, actor.getActorId());
+            updateStmt.setInt(2, actor.getActorId());
             updateStmt.executeUpdate();
 
 
@@ -165,7 +181,7 @@ public class ActorDao {
 		Connection connection = null;
 		PreparedStatement selectStmt = null;
 		ResultSet results = null;
-        List<Actor> actors = new ArrayList<Actors>();
+        List<Actor> actors = new ArrayList<>();
 		try {
 			connection = connectionManager.getConnection();
 			selectStmt = connection.prepareStatement(selectActor);
@@ -175,7 +191,8 @@ public class ActorDao {
 			while(results.next()) {
                 int actorId = results.getInt("ActorId");
 				String resultName = results.getString("Name");
-				String gender = results.getString("Gender");
+				Actor.Gender gender = Actor.Gender.valueOf(
+						results.getString("Gender"));
 				Actor actor = new Actor(actorId, resultName, gender);
 				actors.add(actor);
 			}
