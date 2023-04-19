@@ -118,6 +118,7 @@ String username = (String) session.getAttribute("username");
 		    </li>
 		  </ul>
 		</nav>
+		
 	</div>
 </body>
 </html>
