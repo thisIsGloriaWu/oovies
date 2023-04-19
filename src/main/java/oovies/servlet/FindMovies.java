@@ -75,6 +75,10 @@ public class FindMovies extends HttpServlet {
 	                + " Rating: " + ratingStr);
 	        req.setAttribute("movies", movieList);
 	        req.setAttribute("maxPage", maxPage);
+	        req.setAttribute("title", title);
+	        req.setAttribute("genre", genreStr);
+	        req.setAttribute("year", yearStr);
+	        req.setAttribute("rating", ratingStr);
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        throw new IOException(e);
