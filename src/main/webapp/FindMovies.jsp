@@ -24,6 +24,7 @@ String username = (String) session.getAttribute("username");
 		    	<label class="ms-3 mt-3">Welcome <%= username %></label>
 		    </div>
 		</c:if>
+		
 		<form action="findmovies" method="get">
 			<h1 class="mb-4">Search movies</h1>
 			
@@ -51,7 +52,12 @@ String username = (String) session.getAttribute("username");
 	   			<div class="col-md-2 form-group mr-2">
 	   				<select name="rating" class="form-control">
 			        	<option value="">All ratings</option>
-			        	<option value="5.0">5.0</option>
+			        	<option value="10.0">10.0</option>
+			        	<option value="9.0">9.0 - 9.9</option>
+			        	<option value="8.0">8.0 - 8.9</option>
+			        	<option value="7.0">7.0 - 7.9</option>
+			        	<option value="6.0">6.0 - 6.9</option>
+			        	<option value="5.0">5.0 - 5.9</option>
 			        	<option value="4.0">4.0 - 4.9</option>
 			        	<option value="3.0">3.0 - 3.9</option>
 			        	<option value="2.0">2.0 - 2.9</option>
@@ -63,6 +69,19 @@ String username = (String) session.getAttribute("username");
 				</div>
 			</div>
 		</form>
+		
+		<div class="d-flex justify-content-around mt-3">
+		    <form action="topratedmovies" method="get">
+		        <button type="submit" class="btn btn-primary mt-2 mr-2 me-2">Top 10 Rated Movies</button>
+		    </form>
+		    <form action="toplovedmovies" method="get">
+		        <button type="submit" class="btn btn-primary mt-2 ms-2 me-2">Top 10 Loved Movies</button>
+		    </form>
+		     <form action="newinmovies" method="get">
+		        <button type="submit" class="btn btn-primary mt-2 ms-2">New In Movies</button>
+		    </form>
+		</div>
+		
 		<br/>
 			<span id="successMessage"><b>${messages.success}</b></span>
 		<br/><br/>

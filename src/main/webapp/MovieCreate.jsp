@@ -46,7 +46,7 @@
 	            
 	            <div>
 			  		<label for="rating">Rating: *</label>
-			  		<input type="number" id="rating" name= "rating" step="0.10" min="0.00" max="5.00" required>
+			  		<input type="number" id="rating" name= "rating" step="0.10" min="0.00" max="10.00" required>
 			  	</div>
 			  
 	            <div>

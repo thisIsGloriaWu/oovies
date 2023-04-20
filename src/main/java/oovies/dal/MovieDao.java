@@ -11,6 +11,7 @@ import java.util.List;
 
 import oovies.model.Director;
 import oovies.model.Movie;
+import oovies.model.Person;
 import oovies.model.Studio;
 
 public class MovieDao {
@@ -519,4 +520,171 @@ public class MovieDao {
 		    return count;
 		}
 		
+		public List<Movie> getTopRatedMovies() throws SQLException {
+		    List<Movie> movies = new ArrayList<>();
+
+		    String selectMovies = "SELECT Movie.MovieId, Movie.Title, Movie.ReleaseDate, AVG(Rating.Score) AS Rating, "
+		    		+ "Movie.Duration, Movie.Summary, Movie.DirectorId, Movie.StudioId, Movie.Genre "
+		    		+ "FROM Movie "
+		    		+ "INNER JOIN Rating ON Movie.MovieId = Rating.MovieId\n"
+		    		+ "GROUP BY Movie.MovieId "
+		    		+ "HAVING COUNT(*) >= 100 "
+		    		+ "ORDER BY Rating DESC "
+		    		+ "LIMIT 10;";
+
+		    Connection connection = null;
+		    PreparedStatement selectStmt = null;
+		    ResultSet results = null;
+		    try {
+		        connection = connectionManager.getConnection();
+		        selectStmt = connection.prepareStatement(selectMovies);
+
+		        results = selectStmt.executeQuery();
+		        DirectorDao directorDao = DirectorDao.getInstance();
+		        StudioDao studioDao = StudioDao.getInstance();
+
+		        while (results.next()) {
+		            int resultMovieId = results.getInt("MovieId");
+		            String title = results.getString("Title");
+		            Date releaseDate = results.getDate("ReleaseDate");
+		            Double rating = results.getDouble("Rating");
+		            int duration = results.getInt("Duration");
+		            String summary = results.getString("Summary");
+		            int directorId = results.getInt("DirectorID");
+		            int studioId = results.getInt("StudioID");
+
+		            Director director = directorDao.getDirectorByDirectorId(directorId);
+		            Studio studio = studioDao.getStudioById(studioId);
+		            Movie.Genre resultGenre = Movie.Genre.valueOf(results.getString("Genre"));
+
+		            Movie movie = new Movie(resultMovieId, title, releaseDate, rating, duration, summary,
+		                                    director, studio, resultGenre);
+		            movies.add(movie);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        throw e;
+		    } finally {
+		        if (connection != null) {
+		            connection.close();
+		        }
+		        if (selectStmt != null) {
+		            selectStmt.close();
+		        }
+		        if (results != null) {
+		            results.close();
+		        }
+		    }
+		    return movies;
+		}
+		
+		public List<Movie> getTopLovedMovies() throws SQLException {
+		    List<Movie> movies = new ArrayList<>();
+
+		    String selectMovies = "SELECT Movie.MovieId, Movie.Title, Movie.ReleaseDate, Movie.Rating, "
+		            + "Movie.Duration, Movie.Summary, Movie.DirectorId, Movie.StudioId, Movie.Genre, "
+		            + "COUNT(*) AS LoveCount "
+		            + "FROM Movie "
+		            + "INNER JOIN Love ON Movie.MovieId = Love.MovieId "
+		            + "GROUP BY Movie.MovieId "
+		            + "ORDER BY LoveCount DESC "
+		            + "LIMIT 10;";
+
+		    Connection connection = null;
+		    PreparedStatement selectStmt = null;
+		    ResultSet results = null;
+		    try {
+		        connection = connectionManager.getConnection();
+		        selectStmt = connection.prepareStatement(selectMovies);
+
+		        results = selectStmt.executeQuery();
+		        DirectorDao directorDao = DirectorDao.getInstance();
+		        StudioDao studioDao = StudioDao.getInstance();
+
+		        while (results.next()) {
+		            int resultMovieId = results.getInt("MovieId");
+		            String title = results.getString("Title");
+		            Date releaseDate = results.getDate("ReleaseDate");
+		            Double rating = results.getDouble("Rating");
+		            int duration = results.getInt("Duration");
+		            String summary = results.getString("Summary");
+		            int directorId = results.getInt("DirectorID");
+		            int studioId = results.getInt("StudioID");
+		            Movie.Genre resultGenre = Movie.Genre.valueOf(results.getString("Genre"));
+
+		            Director director = directorDao.getDirectorByDirectorId(directorId);
+		            Studio studio = studioDao.getStudioById(studioId);
+
+		            Movie movie = new Movie(resultMovieId, title, releaseDate, rating, duration, summary,
+		                    director, studio, resultGenre);
+		            movies.add(movie);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        throw e;
+		    } finally {
+		        if (connection != null) {
+		            connection.close();
+		        }
+		        if (selectStmt != null) {
+		            selectStmt.close();
+		        }
+		        if (results != null) {
+		            results.close();
+		        }
+		    }
+		    return movies;
+		}
+		
+		public List<Movie> getNewlyReleasedMovies() throws SQLException {
+		    List<Movie> movies = new ArrayList<>();
+
+		    String selectMovies = "SELECT * FROM Movie WHERE ReleaseDate <= CURRENT_DATE ORDER BY ReleaseDate DESC LIMIT 5";
+
+		    Connection connection = null;
+		    PreparedStatement selectStmt = null;
+		    ResultSet results = null;
+		    try {
+		        connection = connectionManager.getConnection();
+		        selectStmt = connection.prepareStatement(selectMovies);
+
+		        results = selectStmt.executeQuery();
+		        DirectorDao directorDao = DirectorDao.getInstance();
+		        StudioDao studioDao = StudioDao.getInstance();
+
+		        while (results.next()) {
+		            int movieId = results.getInt("MovieId");
+		            String title = results.getString("Title");
+		            Date releaseDate = results.getDate("ReleaseDate");
+		            double rating = results.getDouble("Rating");
+		            int duration = results.getInt("Duration");
+		            String summary = results.getString("Summary");
+		            int directorId = results.getInt("DirectorId");
+		            int studioId = results.getInt("StudioId");
+		            Movie.Genre genre = Movie.Genre.valueOf(results.getString("Genre"));
+
+		            Director director = directorDao.getDirectorByDirectorId(directorId);
+		            Studio studio = studioDao.getStudioById(studioId);
+
+		            Movie movie = new Movie(movieId, title, releaseDate, rating, duration, summary, director, studio, genre);
+		            movies.add(movie);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        throw e;
+		    } finally {
+		        if (connection != null) {
+		            connection.close();
+		        }
+		        if (selectStmt != null) {
+		            selectStmt.close();
+		        }
+		        if (results != null) {
+		            results.close();
+		        }
+		    }
+		    return movies;
+		}
+
+
 }
