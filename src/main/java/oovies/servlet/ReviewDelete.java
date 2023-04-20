@@ -40,8 +40,8 @@ public class ReviewDelete extends HttpServlet {
 		req.setAttribute("messages", messages);
 		
 		String reviewId = req.getParameter("reviewid");
-		if (reviewId == null) {
-			messages.put("title", "Invalid Review Id");
+		if (reviewId == null || reviewId.trim().isEmpty()) {
+			messages.put("title", "Please enter a review Id");
         	messages.put("disableSubmit", "true");
         } else {
         	Reviews review = new Reviews(Integer.valueOf(reviewId));

@@ -40,8 +40,8 @@ public class MovieDelete extends HttpServlet {
         
         // Retrieve and validate movie id
         String movieId = req.getParameter("movieid");
-        if (movieId == null) {
-        	messages.put("title", "Invalid Movie Id");
+        if (movieId == null || movieId.trim().isEmpty()) {
+        	messages.put("title", "Please enter a movid id");
         	messages.put("disableSubmit", "true");
         } else {
         	Movie movie = new Movie(Integer.valueOf(movieId));

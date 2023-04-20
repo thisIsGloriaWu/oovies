@@ -40,8 +40,8 @@ public class RatingDelete extends HttpServlet {
 		req.setAttribute("messages", messages);
 		
 		String ratingId = req.getParameter("ratingid");
-		if (ratingId == null) {
-			messages.put("title", "Invalid Rating Id");
+		if (ratingId == null || ratingId.trim().isEmpty()) {
+			messages.put("title", "Please enter a rating Id");
         	messages.put("disableSubmit", "true");
         } else {
         	Rating rating = new Rating(Integer.valueOf(ratingId));

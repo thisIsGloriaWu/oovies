@@ -34,7 +34,7 @@
             <div class="mb-3">
                 <label class="form-label d-block">Role: *</label>
                 <div class="btn-group" role="group" aria-label="Role">
-                    <input class="btn-check" type="radio" name="role" id="role-admin" value="ADMIN" autocomplete="off">
+                    <input class="btn-check" type="radio" name="role" id="role-admin" value="ADMIN" autocomplete="off" disabled>
                     <label class="btn btn-outline-primary" for="role-admin">Admin</label>
                     <input class="btn-check" type="radio" name="role" id="role-user" value="USER" autocomplete="off">
                     <label class="btn btn-outline-primary" for="role-user">User</label>
