@@ -34,7 +34,7 @@ public class MovieUpdate extends HttpServlet {
 		
 		// Retrieve and validate movie title and genre
 		String movieId = req.getParameter("movieid");
-		if (movieId == null) {
+		if (movieId == null || movieId.trim().isEmpty()) {
 			messages.put("success", "Please enter a valid movie id.");
 		} else {
 			try {
@@ -58,8 +58,8 @@ public class MovieUpdate extends HttpServlet {
         req.setAttribute("messages", messages);
         
         String movieId = req.getParameter("movieid");
-		if (movieId == null) {
-			messages.put("success", "Invalid Movie ID.");
+		if (movieId == null || movieId.trim().isEmpty()) {
+			messages.put("success", "Please enter a valid movie ID");
 		} else {
 			try {
 				Movie movie = movieDao.getMovieById(Integer.valueOf(movieId));

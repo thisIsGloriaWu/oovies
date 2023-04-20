@@ -21,9 +21,7 @@
         <div class="form-group mr-2">
             <input id="movieid" type="text" name="movieid" class="form-control" placeholder="Please Enter the Movie Id">
         </div>
-
-
-        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
     <br/>
     <span id="successMessage"><b>${messages.title}</b></span>
